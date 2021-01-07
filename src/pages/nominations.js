@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion"
 
-const variant = {
+const rootVariant = {
   hidden: {
     opacity: 0,
     x: 100,
@@ -16,27 +16,16 @@ const variant = {
     transition: {
       ease: "easeInOut",
       duration: 0.3,
-      delay: 0.4,
+      delay: 1,
     }
   },
 };
 
 const Nominations = ({ visible }) => {
   return (
-    <AnimatePresence exitBeforeEnter>
-      {visible && (
-        <motion.div
-          layout
-          key='nominations'
-          variants={variant}
-          initial='hidden'
-          animate='visible'
-          exit='hidden'
-        >
-          <h1>Nominations</h1>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <>
+      <h1>Nominations</h1>
+    </>
   );
 }
 

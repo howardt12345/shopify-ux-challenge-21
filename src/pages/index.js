@@ -7,8 +7,6 @@ import Nominations from './nominations';
 
 import { GlobalStyle, media, lightTheme, darkTheme, GlobalStyles } from '../styles';
 
-const queryString = require('query-string');
-
 
 const StyledRoot = styled.div`
   padding-top: 20vh;
@@ -56,16 +54,16 @@ const MainPage = () => {
       <GlobalStyles />
       <StyledRoot>
         <motion.div
-          initial={{ 
+          initial={{
             opacity: 0,
             y: -50,
           }}
-          animate={{ 
+          animate={{
             opacity: 1,
             y: 0,
           }}
           transition={{
-            ease: "easeOut", 
+            ease: "easeOut",
             duration: 0.3,
             delay: 0.2
           }}
@@ -75,16 +73,16 @@ const MainPage = () => {
         <StyledNavLinks>
           <StyledNavList>
             <motion.div
-              initial={{ 
+              initial={{
                 opacity: 0,
                 y: -20,
               }}
-              animate={{ 
+              animate={{
                 opacity: 1,
                 y: 0,
               }}
               transition={{
-                ease: "easeOut", 
+                ease: "easeOut",
                 duration: 0.3,
                 delay: 0.5
               }}
@@ -96,16 +94,16 @@ const MainPage = () => {
               </StyledNavListItem>
             </motion.div>
             <motion.div
-              initial={{ 
+              initial={{
                 opacity: 0,
                 y: -20,
               }}
-              animate={{ 
+              animate={{
                 opacity: 1,
                 y: 0,
               }}
               transition={{
-                ease: "easeOut", 
+                ease: "easeOut",
                 duration: 0.3,
                 delay: 0.65
               }}
@@ -119,14 +117,14 @@ const MainPage = () => {
           </StyledNavList>
         </StyledNavLinks>
         <motion.div
-          initial={{ 
+          initial={{
             opacity: 0,
           }}
-          animate={{ 
+          animate={{
             opacity: 1,
           }}
           transition={{
-            ease: "easeOut", 
+            ease: "easeOut",
             duration: 0.5,
             delay: 0.95
           }}
@@ -134,8 +132,72 @@ const MainPage = () => {
           <div style={{
             display: "flex"
           }}>
-            <Search visible={search} />
-            <Nominations visible={!search}/>
+            <AnimatePresence exitBeforeEnter>
+              {search && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    x: -100,
+                    transition: {
+                      ease: "easeInOut",
+                      duration: 0.3,
+                    }
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    transition: {
+                      ease: "easeInOut",
+                      duration: 0.3,
+                      delay: 0.35,
+                    }
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: -100,
+                    transition: {
+                      ease: "easeInOut",
+                      duration: 0.3,
+                    }
+                  }}
+                >
+                  <Search />
+                </motion.div>
+              )}
+            </AnimatePresence>
+            <AnimatePresence exitBeforeEnter>
+              {!search && (
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    x: 100,
+                    transition: {
+                      ease: "easeInOut",
+                      duration: 0.3,
+                    }
+                  }}
+                  animate={{
+                    opacity: 1,
+                    x: 0,
+                    transition: {
+                      ease: "easeInOut",
+                      duration: 0.3,
+                      delay: 0.35,
+                    }
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: 100,
+                    transition: {
+                      ease: "easeInOut",
+                      duration: 0.3,
+                    }
+                  }}
+                >
+                  <Nominations />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </motion.div>
       </StyledRoot>

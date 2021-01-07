@@ -25,7 +25,7 @@ const resultVariant = {
     transition: {
       ease: "easeOut",
       duration: 0.5,
-      delay: i * 0.125 + 0.5
+      delay: i * 0.125
     }
   })
 }
@@ -68,6 +68,20 @@ const Search = ({ initialQuery = '' }) => {
     setQuery(value);
   }, 1000);
 
+  const nextPage = () => {
+    if(page+1 < totalPages) {
+      setPage(page + 1);
+    }
+    console.log(page);
+  }
+  
+  const prevPage = () => {
+    if(page-1 >= 0) {
+      setPage(page-1);
+    }
+    console.log(page);
+  }
+
   return (
     <div>
       <StyledSearchBar
@@ -75,6 +89,12 @@ const Search = ({ initialQuery = '' }) => {
         placeholder={"Search Movies"}
         onChange={(e) => debounced.callback(e.target.value)}
       />
+      <div style={{
+        display: 'flex'
+      }}>
+        <button onClick={prevPage}>Prev</button>
+        <button onClick={nextPage}>Next</button>
+      </div>
       <AnimatePresence exitBeforeEnter>
         {results.length !== 0 && (
           results.map((result, i) => {

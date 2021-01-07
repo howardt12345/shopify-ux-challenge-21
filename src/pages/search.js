@@ -11,14 +11,12 @@ import { MovieInfo } from '../components';
 const StyledSearchBar = styled.input`
   padding: 1em 1em;
   box-sizing: border-box;
-  margin: 0 auto;
   width: 600px;
   ${media.tablet`width: 80vw`};
 `;
 const StyledSearchNav = styled(motion.div)`
   display: flex;
   justify-content: center;
-  height: 24px;
 `;
 const StyledButton = styled(motion.a)`
   svg {
@@ -28,6 +26,7 @@ const StyledButton = styled(motion.a)`
 `;
 const StyledText = styled(motion.h5)`
   font-weight: 400;
+  text-align: center;
 `;
 
 const navVariant = {
@@ -39,6 +38,19 @@ const navVariant = {
     transition: {
       ease: "easeOut",
       duration: 0.5,
+    }
+  }
+}
+const errorVariant = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      ease: "easeOut",
+      duration: 0.5,
+      delay: 0.25,
     }
   }
 }
@@ -59,9 +71,11 @@ const resultVariant = {
 const Search = ({ initialQuery = '' }) => {
   const [query, setQuery] = useState(initialQuery);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
   const [page, setPage] = useState(0);
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
+  const [started, setStarted] = useState(false);
 
   useEffect(() => {
 
@@ -78,11 +92,14 @@ const Search = ({ initialQuery = '' }) => {
 
         setResults(data.Search);
         setTotalPages(Math.ceil(totalResults / 10));
+        setTotalResults(totalResults);
+        setError('');
       } else {
-        console.log(`response failed: ${error}`);
+        console.log(`response failed: ${data.Error}`);
 
         setResults([]);
         setTotalPages(1);
+        setTotalResults(0);
         setError(data.Error);
       }
     }
@@ -91,6 +108,7 @@ const Search = ({ initialQuery = '' }) => {
   }, [query, page]);
 
   const debounced = useDebouncedCallback((value) => {
+    setStarted(true);
     setPage(0);
     setQuery(value);
   }, 1000);
@@ -116,6 +134,19 @@ const Search = ({ initialQuery = '' }) => {
         placeholder={"Search Movies"}
         onChange={(e) => debounced.callback(e.target.value)}
       />
+      {results.length === 0 && started && query.length !== 0 && (
+        <StyledText
+          key="search_nav_page_indicators"
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          variants={errorVariant}
+          style={{ lineHeight: '0' }}
+          layout
+        >
+          {`Search failed: ${error}`}
+        </StyledText>
+      )}
       <StyledSearchNav
         key="search_nav"
         initial="hidden"
@@ -136,6 +167,7 @@ const Search = ({ initialQuery = '' }) => {
               animate="visible"
               exit="hidden"
               variants={navVariant}
+              layout
             >
               <ChevronLeft />
             </StyledButton>
@@ -143,7 +175,6 @@ const Search = ({ initialQuery = '' }) => {
         </div>
         <div style={{
           height: '24px',
-          margin: '0px 24px'
         }}>
           {results.length !== 0 && (
             <StyledText
@@ -153,8 +184,9 @@ const Search = ({ initialQuery = '' }) => {
               exit="hidden"
               variants={navVariant}
               style={{ lineHeight: '0' }}
+              layout
             >
-              {`Page ${page + 1} of ${totalPages}`}
+              {`Page ${page + 1} of ${totalPages} (${totalResults} results)`}
             </StyledText>
           )}
         </div>
@@ -171,6 +203,7 @@ const Search = ({ initialQuery = '' }) => {
               animate="visible"
               exit="hidden"
               variants={navVariant}
+              layout
             >
               <ChevronRight />
             </StyledButton>

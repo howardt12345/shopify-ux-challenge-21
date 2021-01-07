@@ -10,14 +10,14 @@ const RootContainer = styled.div`
   border: 1px solid;
   box-sizing: border-box;
   border-radius: 0.25em;
-  margin: 1.5em auto;
+  margin: 0 auto 1.5em;
 `;
 const ImageContainer = styled.div`
   padding: 16px 16px;
 `;
 const Image = styled.img`
-  width: 150px;
-  ${media.tablet`width: 20vw`};
+  width: 125px;
+  ${media.tablet`width: 15vw`};
 `;
 const InfoContainer = styled.div`
 `;

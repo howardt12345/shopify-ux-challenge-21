@@ -12,7 +12,6 @@ const RootContainer = styled.div`
   border-radius: 0.25em;
   margin: 1.5em auto;
 `;
-
 const ImageContainer = styled.div`
   padding: 16px 16px;
 `;

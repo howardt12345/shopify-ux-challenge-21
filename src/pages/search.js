@@ -15,6 +15,10 @@ const StyledSearchBar = styled.input`
   width: 600px;
   ${media.tablet`width: 80vw`};
 `;
+const StyledPageNavBox = styled.div`
+  display: flex;
+  justify-content: center;
+`;
 
 const resultVariant = {
   hidden: {
@@ -65,6 +69,7 @@ const Search = ({ initialQuery = '' }) => {
   }, [query, page]);
 
   const debounced = useDebouncedCallback((value) => {
+    setPage(0);
     setQuery(value);
   }, 1000);
 
@@ -89,12 +94,10 @@ const Search = ({ initialQuery = '' }) => {
         placeholder={"Search Movies"}
         onChange={(e) => debounced.callback(e.target.value)}
       />
-      <div style={{
-        display: 'flex'
-      }}>
-        <button onClick={prevPage}>Prev</button>
-        <button onClick={nextPage}>Next</button>
-      </div>
+      <StyledPageNavBox>
+        <button onClick={prevPage} disabled={page === 0}>Prev</button>
+        <button onClick={nextPage} disabled={page === (totalPages-1)}>Next</button>
+      </StyledPageNavBox>
       <AnimatePresence exitBeforeEnter>
         {results.length !== 0 && (
           results.map((result, i) => {

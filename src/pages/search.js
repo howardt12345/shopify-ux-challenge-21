@@ -8,12 +8,12 @@ import { media } from '../styles';
 import { MovieInfo } from '../components';
 
 const StyledSearchBar = styled.input`
-  height: 48px;
-  padding: 12px 10px;
+  padding: 1em 1em;
   box-sizing: border-box;
+  border-radius: 0.25em;
   margin: 0 auto;
   width: 600px;
-  ${media.tablet`width: 75vw`};
+  ${media.tablet`width: 80vw`};
 `;
 
 const resultVariant = {
@@ -32,6 +32,7 @@ const resultVariant = {
 
 const Search = ({ initialQuery = '' }) => {
   const [query, setQuery] = useState(initialQuery);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(0);
   const [results, setResults] = useState([]);
   const [error, setError] = useState('');
@@ -46,11 +47,16 @@ const Search = ({ initialQuery = '' }) => {
       const data = result.data;
       console.log(data);
       if (data.Response === 'True') {
-        console.log("response received");
+        const totalResults = parseInt(data.totalResults);
+        console.log(`${totalResults} responses received`);
+        
         setResults(data.Search);
+        setTotalPages(Math.ceil(totalResults/10));
       } else {
         console.log(`response failed: ${error}`);
+
         setResults([]);
+        setTotalPages(1);
         setError(data.Error);
       }
     }
@@ -66,30 +72,33 @@ const Search = ({ initialQuery = '' }) => {
     <div>
       <StyledSearchBar
         type="text"
-        placeholder={"Search"}
+        placeholder={"Search Movies"}
         onChange={(e) => debounced.callback(e.target.value)}
       />
-      {results.length !== 0 && (
-        results.map((result, i) => {
-          return (
-            <motion.div
-              key={'search_result_' + result.imdbID}
-              custom={i}
-              initial="hidden"
-              animate="visible"
-              variants={resultVariant}
-            >
-              <MovieInfo
-                title={result.Title}
-                year={result.Year}
-                id={result.imdbID}
-                key={"search_" + result.imdbID}
-                poster={result.Poster}
-              />
-            </motion.div>
-          )
-        })
-      )}
+      <AnimatePresence exitBeforeEnter>
+        {results.length !== 0 && (
+          results.map((result, i) => {
+            return (
+              <motion.div
+                key={'search_result_' + result.imdbID}
+                custom={i}
+                initial="hidden"
+                animate="visible"
+                exit="hidden"
+                variants={resultVariant}
+              >
+                <MovieInfo
+                  title={result.Title}
+                  year={result.Year}
+                  id={result.imdbID}
+                  key={"search_" + result.imdbID}
+                  poster={result.Poster}
+                />
+              </motion.div>
+            )
+          })
+        )}
+      </AnimatePresence>
     </div>
   );
 }

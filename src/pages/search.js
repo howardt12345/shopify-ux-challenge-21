@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from "framer-motion"
 import styled from 'styled-components';
 import axios from 'axios';
-import { useDebounce, useDebouncedCallback } from 'use-debounce';
+import { useDebouncedCallback } from 'use-debounce';
+import { ChevronLeft, ChevronRight } from '@styled-icons/boxicons-regular';
 
 import { media } from '../styles';
 import { MovieInfo } from '../components';
@@ -10,16 +11,35 @@ import { MovieInfo } from '../components';
 const StyledSearchBar = styled.input`
   padding: 1em 1em;
   box-sizing: border-box;
-  border-radius: 0.25em;
   margin: 0 auto;
   width: 600px;
   ${media.tablet`width: 80vw`};
 `;
-const StyledPageNavBox = styled.div`
+const StyledSearchNav = styled(motion.div)`
   display: flex;
   justify-content: center;
+  height: 24px;
+`;
+const StyledButton = styled(motion.a)`
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 `;
 
+const navVariant = {
+  hidden: {
+    opacity: 0,
+  },
+  visible: {
+    opacity: 1,
+    transition: {
+      ease: "easeOut",
+      duration: 0.5,
+      delay: 0.125
+    }
+  }
+}
 const resultVariant = {
   hidden: {
     opacity: 0,
@@ -53,9 +73,9 @@ const Search = ({ initialQuery = '' }) => {
       if (data.Response === 'True') {
         const totalResults = parseInt(data.totalResults);
         console.log(`${totalResults} responses received`);
-        
+
         setResults(data.Search);
-        setTotalPages(Math.ceil(totalResults/10));
+        setTotalPages(Math.ceil(totalResults / 10));
       } else {
         console.log(`response failed: ${error}`);
 
@@ -74,15 +94,15 @@ const Search = ({ initialQuery = '' }) => {
   }, 1000);
 
   const nextPage = () => {
-    if(page+1 < totalPages) {
+    if (page + 1 < totalPages) {
       setPage(page + 1);
     }
     console.log(page);
   }
-  
+
   const prevPage = () => {
-    if(page-1 >= 0) {
-      setPage(page-1);
+    if (page - 1 >= 0) {
+      setPage(page - 1);
     }
     console.log(page);
   }
@@ -94,10 +114,53 @@ const Search = ({ initialQuery = '' }) => {
         placeholder={"Search Movies"}
         onChange={(e) => debounced.callback(e.target.value)}
       />
-      <StyledPageNavBox>
-        <button onClick={prevPage} disabled={page === 0}>Prev</button>
-        <button onClick={nextPage} disabled={page === (totalPages-1)}>Next</button>
-      </StyledPageNavBox>
+      <StyledSearchNav
+        key="search_nav"
+        initial="hidden"
+        animate="visible"
+        exit="hidden"
+        variants={navVariant}
+      >
+        <div style={{
+          width: '24px',
+          height: '24px',
+          padding: '12px',
+        }}>
+          {!(page === 0) && (
+            <StyledButton
+              onClick={prevPage}
+              key="search_nav_prev"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={navVariant}
+            >
+              <ChevronLeft />
+            </StyledButton>
+          )}
+        </div>
+        <div>
+          <h5>{`Page ${page+1} of ${totalPages}`}</h5>
+        </div>
+        <div style={{
+          width: '24px',
+          height: '24px',
+          padding: '12px',
+        }}>
+          {!(page === (totalPages - 1)) && (
+            <StyledButton
+              onClick={nextPage}
+              key="search_nav_next"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={navVariant}
+            >
+              <ChevronRight />
+            </StyledButton>
+          )}
+        </div>
+      </StyledSearchNav>
       <AnimatePresence exitBeforeEnter>
         {results.length !== 0 && (
           results.map((result, i) => {

@@ -26,6 +26,9 @@ const StyledButton = styled(motion.a)`
     height: 24px;
   }
 `;
+const StyledText = styled(motion.h5)`
+  font-weight: 400;
+`;
 
 const navVariant = {
   hidden: {
@@ -36,7 +39,6 @@ const navVariant = {
     transition: {
       ease: "easeOut",
       duration: 0.5,
-      delay: 0.125
     }
   }
 }
@@ -49,7 +51,7 @@ const resultVariant = {
     transition: {
       ease: "easeOut",
       duration: 0.5,
-      delay: i * 0.125
+      delay: i * 0.125 + 0.125
     }
   })
 }
@@ -139,8 +141,22 @@ const Search = ({ initialQuery = '' }) => {
             </StyledButton>
           )}
         </div>
-        <div>
-          <h5>{`Page ${page+1} of ${totalPages}`}</h5>
+        <div style={{
+          height: '24px',
+          margin: '0px 24px'
+        }}>
+          {results.length !== 0 && (
+            <StyledText
+              key="search_nav_page_indicators"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={navVariant}
+              style={{ lineHeight: '0' }}
+            >
+              {`Page ${page + 1} of ${totalPages}`}
+            </StyledText>
+          )}
         </div>
         <div style={{
           width: '24px',

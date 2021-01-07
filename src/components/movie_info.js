@@ -10,7 +10,7 @@ const RootContainer = styled.div`
   border: 1px solid;
   box-sizing: border-box;
   border-radius: 0.25em;
-  margin: 2em auto;
+  margin: 1.5em auto;
 `;
 
 const ImageContainer = styled.div`

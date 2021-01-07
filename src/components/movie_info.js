@@ -29,10 +29,15 @@ export const MovieInfo = (props) => {
   return (
     <RootContainer>
       <ImageContainer>
+        {poster !== 'N/A' ? 
         <Image
           src={poster}
           alt={'Movie Poster'}
-        />
+        /> : 
+        <Image
+          src={'https://via.placeholder.com/300x396.png?text=No%20Movie%20Poster'}
+          alt={'Placeholder Movie Poster'}
+        />}
       </ImageContainer>
       <InfoContainer>
         <h3>{title}</h3>

@@ -1,5 +1,10 @@
 import { createGlobalStyle} from "styled-components"
 
+const hex2rgba = (hex, alpha = 1) => {
+  const [r, g, b] = hex.match(/\w\w/g).map(x => parseInt(x, 16));
+  return `rgba(${r},${g},${b},${alpha})`;
+};
+
 const GlobalStyles = createGlobalStyle`
   body {
     background: ${({ theme }) => theme.bg};
@@ -17,6 +22,24 @@ const GlobalStyles = createGlobalStyle`
     &:hover,
     &:focus {
       color: ${({ theme }) => theme.accent};
+    }
+  }
+  
+  button {
+    cursor: pointer;
+    background-color: transparent;
+    border: 1px solid ${({ theme }) => theme.accent};
+    border-radius: 3px;
+    line-height: 1;
+    padding: 0.75rem 1rem;
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: ${({ theme }) => hex2rgba(theme.accent, 0.07)};
+      outline: none;
+    }
+    &:after {
+      display: none !important;
     }
   }
 `

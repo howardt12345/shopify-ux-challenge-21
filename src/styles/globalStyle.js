@@ -29,9 +29,14 @@ const GlobalStyles = createGlobalStyle`
     cursor: pointer;
     background-color: transparent;
     border: 1px solid ${({ theme }) => theme.accent};
+    color: ${({ theme }) => theme.text};
     border-radius: 3px;
     line-height: 1;
     padding: 0.75rem 1rem;
+    &:disabled {
+      color: ${({ theme }) => hex2rgba(theme.text, 0.5)};
+      cursor: not-allowed;
+    }
     &:hover,
     &:focus,
     &:active {

@@ -2,10 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import MainPage from './pages/index';
 import reportWebVitals from './reportWebVitals';
+import SnackbarProvider from 'react-simple-snackbar'
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <MainPage />
+    <SnackbarProvider>
+      <MainPage />
+    </SnackbarProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

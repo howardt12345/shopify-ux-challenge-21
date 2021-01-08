@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useSnackbar } from 'react-simple-snackbar'
 
 import Search from './search';
 import Nominations from './nominations';
@@ -40,10 +41,23 @@ const StyledNavListLink = styled.a`
   text-decoration: ${props => props.selected ? 'underline' : 'none'};
 `;
 
+const snackbarOptions = {
+  position: 'bottom-right',
+  style: {
+    backgroundColor: 'white',
+    border: '1px solid black',
+    color: 'black',
+  },
+  closeStyle: {
+    color: 'black',
+  }
+}
+
 const MainPage = () => {
   const [nominations, setNominations] = useState([]);
   const [search, setSearch] = useState(true);
   const [theme, setTheme] = useState('light');
+  const [openSnackbar, closeSnackbar] = useSnackbar(snackbarOptions);
 
   const toggleTheme = () => {
     theme === 'light' ? setTheme('dark') : setTheme('light');
@@ -53,8 +67,11 @@ const MainPage = () => {
     if (!isNominated(nomination)) {
       let tmp = [...nominations];
       tmp.push(nomination);
-      setNominations(tmp);
       console.log(tmp);
+      setNominations(tmp);
+      if(tmp.length === 5) {
+        openSnackbar("You've made 5 nominations!");
+      }
     }
   }
 
@@ -64,7 +81,6 @@ const MainPage = () => {
     if (index > -1)
       tmp.splice(index, 1);
     setNominations(tmp);
-    console.log(tmp);
   }
 
   const isNominated = (id) => nominations.filter(n => n.imdbID === id).length > 0
@@ -72,6 +88,7 @@ const MainPage = () => {
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <GlobalStyles />
+      <button onClick={toggleTheme}>Toggle Theme</button>
       <StyledRoot>
         <motion.div
           initial={{

@@ -68,7 +68,7 @@ const resultVariant = {
   })
 }
 
-const Search = ({ initialQuery = '' }) => {
+const Search = ({ initialQuery = '', nominate, isNominated }) => {
   const [query, setQuery] = useState(initialQuery);
   const [totalPages, setTotalPages] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -117,14 +117,12 @@ const Search = ({ initialQuery = '' }) => {
     if (page + 1 < totalPages) {
       setPage(page + 1);
     }
-    console.log(page);
   }
 
   const prevPage = () => {
     if (page - 1 >= 0) {
       setPage(page - 1);
     }
-    console.log(page);
   }
 
   return (
@@ -210,7 +208,7 @@ const Search = ({ initialQuery = '' }) => {
           )}
         </div>
       </StyledSearchNav>
-      <AnimatePresence exitBeforeEnter>
+      <AnimatePresence>
         {results.length !== 0 && (
           results.map((result, i) => {
             return (
@@ -223,11 +221,11 @@ const Search = ({ initialQuery = '' }) => {
                 variants={resultVariant}
               >
                 <MovieInfo
-                  title={result.Title}
-                  year={result.Year}
-                  id={result.imdbID}
+                  search={true}
+                  movie={result}
                   key={"search_" + result.imdbID}
-                  poster={result.Poster}
+                  nominate={nominate}
+                  isNominated={isNominated(result.imdbID)}
                 />
               </motion.div>
             )

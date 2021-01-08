@@ -49,6 +49,26 @@ const MainPage = () => {
     theme === 'light' ? setTheme('dark') : setTheme('light');
   }
 
+  const nominate = (nomination) => {
+    if (!isNominated(nomination)) {
+      let tmp = [...nominations];
+      tmp.push(nomination);
+      setNominations(tmp);
+      console.log(tmp);
+    }
+  }
+
+  const unNominate = (nomination) => {
+    let tmp = [...nominations];
+    const index = tmp.indexOf(nomination);
+    if (index > -1)
+      tmp.splice(index, 1);
+    setNominations(tmp);
+    console.log(tmp);
+  }
+
+  const isNominated = (id) => nominations.filter(n => n.imdbID === id).length > 0
+
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <GlobalStyles />
@@ -110,7 +130,7 @@ const MainPage = () => {
             >
               <StyledNavListItem>
                 <StyledNavListLink onClick={() => setSearch(false)} selected={!search}>
-                  Nominations
+                  {`Nominations (${nominations.length})`}
                 </StyledNavListLink>
               </StyledNavListItem>
             </motion.div>
@@ -161,7 +181,11 @@ const MainPage = () => {
                     }
                   }}
                 >
-                  <Search />
+                  <Search
+                    nominate={nominate}
+                    unNominate={unNominate}
+                    isNominated={isNominated}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -194,7 +218,11 @@ const MainPage = () => {
                     }
                   }}
                 >
-                  <Nominations />
+                  <Nominations
+                    nominations={nominations}
+                    unNominate={unNominate}
+                    isNominated={isNominated}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>

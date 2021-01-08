@@ -11,37 +11,52 @@ const RootContainer = styled.div`
   box-sizing: border-box;
   border-radius: 0.25em;
   margin: 0 auto 1.5em;
+  padding: 16px 16px;
+  position: relative;
 `;
 const ImageContainer = styled.div`
-  padding: 16px 16px;
+  margin: 0 16px 0 0;
 `;
 const Image = styled.img`
   width: 125px;
   ${media.tablet`width: 15vw`};
 `;
 const InfoContainer = styled.div`
+
 `;
 
-export const MovieInfo = (props) => {
-  const { title, year, id, poster } = props;
+export const MovieInfo = ({ search, movie, nominate, isNominated, unNominate }) => {
+
+  const { Title, Year, imdbID, Poster } = movie;
 
   return (
-    <RootContainer>
+    <RootContainer key={imdbID}>
       <ImageContainer>
-        {poster !== 'N/A' ? 
-        <Image
-          src={poster}
-          alt={'Movie Poster'}
-        /> : 
-        <Image
-          src={'https://via.placeholder.com/300x396.png?text=No%20Movie%20Poster'}
-          alt={'Placeholder Movie Poster'}
-        />}
+        {Poster !== 'N/A' ?
+          <Image
+            src={Poster}
+            alt={'Movie Poster'}
+          /> :
+          <Image
+            src={'https://via.placeholder.com/300x396.png?text=No%20Movie%20Poster'}
+            alt={'Placeholder Movie Poster'}
+          />}
       </ImageContainer>
       <InfoContainer>
-        <h3>{title}</h3>
-        <h5>{year}</h5>
+        <h3>{Title}</h3>
+        <h5>{Year}</h5>
       </InfoContainer>
+      <button
+          style={{
+            position: 'absolute',
+            right: '16px',
+            bottom: '16px'
+          }}
+          onClick={() => !isNominated ? nominate(movie) : unNominate(movie)}
+          disabled={search ? isNominated : !isNominated}
+        >
+          {search ? "Nominate" : "Remove"}
+        </button>
     </RootContainer>
   );
 }

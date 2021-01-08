@@ -8,6 +8,7 @@ import Nominations from './nominations';
 
 import { GlobalStyle, media, lightTheme, darkTheme, GlobalStyles } from '../styles';
 
+const queryString = require('query-string');
 
 const StyledRoot = styled.div`
   padding-top: 20vh;
@@ -58,6 +59,9 @@ const MainPage = () => {
   const [search, setSearch] = useState(true);
   const [theme, setTheme] = useState('light');
   const [openSnackbar, closeSnackbar] = useSnackbar(snackbarOptions);
+  const [initialQuery, setinitialQuery] = useState('');
+
+  const queryData = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
 
   const toggleTheme = () => {
     theme === 'light' ? setTheme('dark') : setTheme('light');
@@ -199,6 +203,7 @@ const MainPage = () => {
                   }}
                 >
                   <Search
+                    initialQuery={queryData.s}
                     nominate={nominate}
                     unNominate={unNominate}
                     isNominated={isNominated}

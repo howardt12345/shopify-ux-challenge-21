@@ -8,6 +8,8 @@ import { ChevronLeft, ChevronRight } from '@styled-icons/boxicons-regular';
 import { media } from '../styles';
 import { MovieInfo } from '../components';
 
+const queryString = require('query-string');
+
 const StyledSearchBar = styled.input`
   padding: 1em 1em;
   box-sizing: border-box;
@@ -111,6 +113,18 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
     setStarted(true);
     setPage(0);
     setQuery(value);
+
+    const data = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
+    let str;
+    if(data.n) {
+      str = `&n[]=${data.n.join('&n[]=')}`;
+    }
+
+    if(value.length !== 0) {
+      window.history.pushState('', '', `${window.location.origin}/?s=${encodeURI(value)}${str}`);
+    } else {
+      window.history.pushState('', '', `${window.location.origin}/?${str}`);
+    }
   }, 1000);
 
   const nextPage = () => {

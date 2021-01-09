@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { ChevronLeft, ChevronRight } from '@styled-icons/boxicons-regular';
 
 import { media } from '../styles';
-import { MovieInfo } from '../components';
+import { Button, MovieInfo } from '../components';
 
 const queryString = require('query-string');
 
@@ -19,12 +19,6 @@ const StyledSearchBar = styled.input`
 const StyledSearchNav = styled(motion.div)`
   display: flex;
   justify-content: center;
-`;
-const StyledButton = styled(motion.a)`
-  svg {
-    width: 24px;
-    height: 24px;
-  }
 `;
 const StyledText = styled(motion.h5)`
   font-weight: 400;
@@ -167,12 +161,11 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
         variants={navVariant}
       >
         <div style={{
-          width: '24px',
-          height: '24px',
-          padding: '12px',
+          width: '48px',
+          height: '48px',
         }}>
           {!(page === 0) && (
-            <StyledButton
+            <Button
               onClick={prevPage}
               key="search_nav_prev"
               initial="hidden"
@@ -182,7 +175,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
               layout
             >
               <ChevronLeft />
-            </StyledButton>
+            </Button>
           )}
         </div>
         <div style={{
@@ -203,12 +196,11 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
           )}
         </div>
         <div style={{
-          width: '24px',
-          height: '24px',
-          padding: '12px',
+          width: '48px',
+          height: '48px',
         }}>
           {!(page === (totalPages - 1)) && (
-            <StyledButton
+            <Button
               onClick={nextPage}
               key="search_nav_next"
               initial="hidden"
@@ -218,7 +210,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
               layout
             >
               <ChevronRight />
-            </StyledButton>
+            </Button>
           )}
         </div>
       </StyledSearchNav>

@@ -25,8 +25,12 @@ const StyledLinkInput = styled(motion.input)`
   flex-grow: 1;
   width: 100%;
 `;
+const StyledText = styled(motion.h4)`
+  font-weight: 400;
+  text-align: center;
+`;
 
-const buttonVariant = {
+const basicVariant = {
   hidden: {
     opacity: 0,
     transition: {
@@ -104,10 +108,35 @@ const Nominations = ({ nominations, unNominate, isNominated }) => {
     openSnackbar("Successfully copied!");
   }
 
+  const share = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: "Shopify UX Challenge by Howard Tseng",
+        url: link,
+      }).then(() => console.log('Successful share'))
+        .catch((error) => console.log(`Error sharing: ${error}`));
+    } else {
+      console.log("Web Share API is not supported in your browser.")
+    }
+  }
+
   return (
     <div>
       <AnimatePresence>
         <ShareContainer>
+          {nominations.length === 0 &&
+            <StyledText
+              key="nominations_error"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={basicVariant}
+              style={{ lineHeight: '0' }}
+              layout
+            >
+              No Nominations Selected.
+            </StyledText>
+          }
           {link.length === 0 && nominations.length !== 0 && (
             <IconButton
               key="nominations_share"
@@ -116,7 +145,7 @@ const Nominations = ({ nominations, unNominate, isNominated }) => {
               initial="hidden"
               animate="visible"
               exit="hidden"
-              variants={buttonVariant}
+              variants={basicVariant}
               layout
             >
               <Link />
@@ -134,6 +163,7 @@ const Nominations = ({ nominations, unNominate, isNominated }) => {
                 animate="visible"
                 exit="hidden"
                 variants={linkVariant}
+                layout
               />
               <IconButton
                 key="nominations_copy"
@@ -141,26 +171,19 @@ const Nominations = ({ nominations, unNominate, isNominated }) => {
                 initial="hidden"
                 animate="visible"
                 exit="hidden"
-                variants={buttonVariant}
+                variants={basicVariant}
+                layout
               >
                 <Copy />
               </IconButton>
               {navigator.share && (<IconButton
                 key="nominations_share"
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      url: link,
-                    }).then(() => console.log('Successful share'))
-                    .catch((error) => console.log('Error sharing', error));
-                  } else {
-                    console.log("Web Share API is not supported in your browser.")
-                  }
-                }}
+                onClick={share}
                 initial="hidden"
                 animate="visible"
                 exit="hidden"
-                variants={buttonVariant}
+                variants={basicVariant}
+                layout
               >
                 <Share />
               </IconButton>)}

@@ -3,17 +3,24 @@ import styled, { ThemeProvider } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSnackbar } from 'react-simple-snackbar'
 import axios from 'axios';
+import { Brightness3, Brightness7 } from '@styled-icons/material';
+import { InfoCircle } from '@styled-icons/boxicons-regular';
 
 import Search from './search';
 import Nominations from './nominations';
 
 import { media, lightTheme, darkTheme, GlobalStyles } from '../styles';
-import { Primevideo } from 'styled-icons/simple-icons';
+import { Button, InfoDialog } from '../components';
 
 const queryString = require('query-string');
 
+const StyledInfoBox = styled.div`
+  margin-left: auto;
+  display: flex; 
+  justify-content: flex-end;
+`;
 const StyledRoot = styled.div`
-  padding-top: 20vh;
+  padding-top: 15vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,7 +32,7 @@ const StyledTitle = styled.h1`
   line-height: 0.75;
   font-weight: 400;
   ${media.phablet`font-size: 52px;`};
-  margin-bottom: 0.25em
+  margin-bottom: 0.25em;
 `;
 const StyledNavLinks = styled.div`
   align-items: center;
@@ -62,29 +69,30 @@ const MainPage = () => {
   const [theme, setTheme] = useState('light');
   const [openSnackbar, closeSnackbar] = useSnackbar(snackbarOptions);
   const [initialQuery, setinitialQuery] = useState('');
+  const [infoDialog, setInfoDialog] = useState(false);
 
-  const queryData = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
+  const queryData = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
 
   useEffect(async () => {
-    const data = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
-    if(data.n) {
+    const data = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
+    if (data.n) {
       const array = data.n;
       const tmp = [];
 
       console.log(array);
-      
+
       const responses = await Promise.all(
         array.map(n => axios(`https://www.omdbapi.com/?i=${n}&type=movie&apikey=${process.env.REACT_APP_OMDB_API_KEY_2}`))
       );
 
       responses.forEach(response => {
-        if(response.data.Response === 'True') {
+        if (response.data.Response === 'True') {
           tmp.push(response.data);
         }
       });
-      if(tmp.length !== 0) {
+      if (tmp.length !== 0) {
         setNominations(tmp);
-        if(!data.s) {
+        if (!data.s) {
           setSearch(false);
         }
       }
@@ -100,7 +108,7 @@ const MainPage = () => {
       let tmp = [...nominations];
       tmp.push(nomination);
       setNominations(tmp);
-      if(tmp.length === 5) {
+      if (tmp.length === 5) {
         openSnackbar("You've made 5 nominations!");
       }
       updateUrl(tmp);
@@ -119,12 +127,12 @@ const MainPage = () => {
   const isNominated = (id) => nominations.filter(n => n.imdbID === id).length > 0;
 
   const updateUrl = (noms) => {
-    const data = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
+    const data = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
 
     const nids = noms.map(n => n.imdbID);
     const str = `n[]=${nids.join('&n[]=')}`;
 
-    if(data.s) {
+    if (data.s) {
       window.history.pushState('', '', `${window.location.origin}/?s=${data.s}&${str}`);
     } else {
       window.history.pushState('', '', `${window.location.origin}/?${str}`);
@@ -134,7 +142,14 @@ const MainPage = () => {
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <GlobalStyles />
-      <button onClick={toggleTheme}>Toggle Theme</button>
+      <StyledInfoBox>
+        <Button onClick={toggleTheme}>
+          {theme === 'light' ? <Brightness3 /> : <Brightness7 />}
+        </Button>
+        <Button onClick={() => setInfoDialog(true)}>
+          <InfoCircle />
+        </Button>
+      </StyledInfoBox>
       <StyledRoot>
         <motion.div
           initial={{
@@ -295,6 +310,7 @@ const MainPage = () => {
           </div>
         </motion.div>
       </StyledRoot>
+      <InfoDialog isOpen={infoDialog} onClose={() => setInfoDialog(false)}/>
     </ThemeProvider>
   );
 }

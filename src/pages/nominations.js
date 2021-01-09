@@ -3,25 +3,6 @@ import { motion, AnimatePresence } from "framer-motion"
 
 import { MovieInfo } from '../components';
 
-const rootVariant = {
-  hidden: {
-    opacity: 0,
-    x: 100,
-    transition: {
-      ease: "easeInOut",
-      duration: 0.3,
-    }
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: {
-      ease: "easeInOut",
-      duration: 0.3,
-      delay: 1,
-    }
-  },
-};
 const resultVariant = {
   hidden: {
     opacity: 0,

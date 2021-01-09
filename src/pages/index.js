@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSnackbar } from 'react-simple-snackbar'
+import axios from 'axios';
 
 import Search from './search';
 import Nominations from './nominations';
 
-import { GlobalStyle, media, lightTheme, darkTheme, GlobalStyles } from '../styles';
+import { media, lightTheme, darkTheme, GlobalStyles } from '../styles';
+import { Primevideo } from 'styled-icons/simple-icons';
 
 const queryString = require('query-string');
 
@@ -63,6 +65,32 @@ const MainPage = () => {
 
   const queryData = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
 
+  useEffect(async () => {
+    const data = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
+    if(data.n) {
+      const array = data.n;
+      const tmp = [];
+
+      console.log(array);
+      
+      const responses = await Promise.all(
+        array.map(n => axios(`https://www.omdbapi.com/?i=${n}&type=movie&apikey=${process.env.REACT_APP_OMDB_API_KEY_2}`))
+      );
+
+      responses.forEach(response => {
+        if(response.data.Response === 'True') {
+          tmp.push(response.data);
+        }
+      });
+      if(tmp.length !== 0) {
+        setNominations(tmp);
+        if(!data.s) {
+          setSearch(false);
+        }
+      }
+    }
+  }, []);
+
   const toggleTheme = () => {
     theme === 'light' ? setTheme('dark') : setTheme('light');
   }
@@ -71,11 +99,11 @@ const MainPage = () => {
     if (!isNominated(nomination)) {
       let tmp = [...nominations];
       tmp.push(nomination);
-      console.log(tmp);
       setNominations(tmp);
       if(tmp.length === 5) {
         openSnackbar("You've made 5 nominations!");
       }
+      updateUrl(tmp);
     }
   }
 
@@ -85,9 +113,23 @@ const MainPage = () => {
     if (index > -1)
       tmp.splice(index, 1);
     setNominations(tmp);
+    updateUrl(tmp);
   }
 
-  const isNominated = (id) => nominations.filter(n => n.imdbID === id).length > 0
+  const isNominated = (id) => nominations.filter(n => n.imdbID === id).length > 0;
+
+  const updateUrl = (noms) => {
+    const data = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
+
+    const nids = noms.map(n => n.imdbID);
+    const str = `n[]=${nids.join('&n[]=')}`;
+
+    if(data.s) {
+      window.history.pushState('', '', `${window.location.origin}/?s=${data.s}&${str}`);
+    } else {
+      window.history.pushState('', '', `${window.location.origin}/?${str}`);
+    }
+  }
 
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
@@ -207,6 +249,7 @@ const MainPage = () => {
                     nominate={nominate}
                     unNominate={unNominate}
                     isNominated={isNominated}
+                    updateUrl={updateUrl}
                   />
                 </motion.div>
               )}
@@ -244,6 +287,7 @@ const MainPage = () => {
                     nominations={nominations}
                     unNominate={unNominate}
                     isNominated={isNominated}
+                    updateUrl={updateUrl}
                   />
                 </motion.div>
               )}

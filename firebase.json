@@ -6,10 +6,15 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "appAssociation": "AUTO",
     "rewrites": [
       {
-        "source": "**",
+        "source": "!/share/**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/share/**",
+        "dynamicLinks": true
       }
     ]
   }

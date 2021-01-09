@@ -5,7 +5,7 @@ import styled, { ThemeContext } from 'styled-components';
 import { Github } from 'styled-icons/boxicons-logos';
 
 import { media } from '../styles';
-import { Button, Copyright } from '../components';
+import { IconButton, Copyright } from '../components';
 
 const StyledDialog = styled(Dialog)`
   width: 600px;
@@ -27,12 +27,7 @@ const StyledInfoContent = styled.p`
   text-align: left;
   line-height: 1.5;
 `;
-const StyledFooterLink = styled.a`
-  display:block;
-  text-align: center;
-  font-size: 0.8em;
-  flex-direction: column;
-`;
+
 export const InfoDialog = ({ isOpen, onClose }) => {
 
   const themeContext = useContext(ThemeContext);
@@ -43,16 +38,15 @@ export const InfoDialog = ({ isOpen, onClose }) => {
       onDismiss={onClose}
       theme={themeContext}
     >
-      <StyledContainer>
+      <StyledContainer aria-label={'info-dialog'}>
         <StyledTitle>About</StyledTitle>
         <StyledInfoContent>Created by Howard Tseng for the Shopify UX Developer Intern & Web Developer Intern (Summer 2021) Challenge. This project uses React and Styled Components, with animations handled by Framer Motion. The website is hosted on Firebase, and Dynamic Links are used for the sharing feature.</StyledInfoContent>
-        <StyledInfoContent>Hoping whoever sees this likes the application!</StyledInfoContent>
-        <Button 
+        <IconButton 
           href="https://github.com/howardt12345/shopify-ux-challenge-21"
           target="_blank"
           rel="nofollow noopener noreferrer">
           <Github />
-        </Button>
+        </IconButton>
         <Copyright />
       </StyledContainer>
       <button onClick={onClose}>Close</button>

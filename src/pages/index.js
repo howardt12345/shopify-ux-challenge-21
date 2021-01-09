@@ -9,8 +9,8 @@ import { InfoCircle } from '@styled-icons/boxicons-regular';
 import Search from './search';
 import Nominations from './nominations';
 
-import { media, lightTheme, darkTheme, GlobalStyles } from '../styles';
-import { Button, Copyright, InfoDialog } from '../components';
+import { media, lightTheme, darkTheme, GlobalStyles, snackbarOptions } from '../styles';
+import { IconButton, Copyright, InfoDialog } from '../components';
 
 const queryString = require('query-string');
 
@@ -51,52 +51,43 @@ const StyledNavListLink = styled.a`
   text-decoration: ${props => props.selected ? 'underline' : 'none'};
 `;
 
-const snackbarOptions = {
-  position: 'bottom-right',
-  style: {
-    backgroundColor: 'white',
-    border: '1px solid black',
-    color: 'black',
-  },
-  closeStyle: {
-    color: 'black',
-  }
-}
-
 const MainPage = () => {
   const [nominations, setNominations] = useState([]);
   const [search, setSearch] = useState(true);
   const [theme, setTheme] = useState('light');
-  const [openSnackbar, closeSnackbar] = useSnackbar(snackbarOptions);
-  const [initialQuery, setinitialQuery] = useState('');
+  const [openSnackbar] = useSnackbar(snackbarOptions);
   const [infoDialog, setInfoDialog] = useState(false);
 
   const queryData = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
 
-  useEffect(async () => {
-    const data = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
-    if (data.n) {
-      const array = data.n;
-      const tmp = [];
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
+      if (data.n) {
+        const array = data.n;
+        const tmp = [];
 
-      console.log(array);
+        console.log(array);
 
-      const responses = await Promise.all(
-        array.map(n => axios(`https://www.omdbapi.com/?i=${n}&type=movie&apikey=${process.env.REACT_APP_OMDB_API_KEY_2}`))
-      );
+        const responses = await Promise.all(
+          array.map(n => axios(`https://www.omdbapi.com/?i=${n}&type=movie&apikey=${process.env.REACT_APP_OMDB_API_KEY_2}`))
+        );
 
-      responses.forEach(response => {
-        if (response.data.Response === 'True') {
-          tmp.push(response.data);
-        }
-      });
-      if (tmp.length !== 0) {
-        setNominations(tmp);
-        if (!data.s) {
-          setSearch(false);
+        responses.forEach(response => {
+          if (response.data.Response === 'True') {
+            tmp.push(response.data);
+          }
+        });
+        if (tmp.length !== 0) {
+          setNominations(tmp);
+          if (!data.s) {
+            setSearch(false);
+          }
         }
       }
     }
+
+    fetchData();
   }, []);
 
   const toggleTheme = () => {
@@ -129,8 +120,7 @@ const MainPage = () => {
   const updateUrl = (noms) => {
     const data = queryString.parse(window.location.search, { arrayFormat: 'bracket' });
 
-    const nids = noms.map(n => n.imdbID);
-    const str = `n[]=${nids.join('&n[]=')}`;
+    const str = `n[]=${noms.map(n => n.imdbID).join('&n[]=')}`;
 
     if (data.s) {
       window.history.pushState('', '', `${window.location.origin}/?s=${data.s}&${str}`);
@@ -144,12 +134,12 @@ const MainPage = () => {
       <GlobalStyles />
       <Copyright />
       <StyledInfoBox>
-        <Button onClick={toggleTheme}>
+        <IconButton onClick={toggleTheme}>
           {theme === 'light' ? <Brightness3 /> : <Brightness7 />}
-        </Button>
-        <Button onClick={() => setInfoDialog(true)}>
+        </IconButton>
+        <IconButton onClick={() => setInfoDialog(true)}>
           <InfoCircle />
-        </Button>
+        </IconButton>
       </StyledInfoBox>
       <StyledRoot>
         <motion.div

@@ -6,7 +6,7 @@ import { useDebouncedCallback } from 'use-debounce';
 import { ChevronLeft, ChevronRight } from '@styled-icons/boxicons-regular';
 
 import { media } from '../styles';
-import { Button, MovieInfo } from '../components';
+import { IconButton, MovieInfo } from '../components';
 
 const queryString = require('query-string');
 
@@ -53,9 +53,11 @@ const errorVariant = {
 const resultVariant = {
   hidden: {
     opacity: 0,
+    y: 20,
   },
   visible: i => ({
     opacity: 1,
+    y: 0,
     transition: {
       ease: "easeOut",
       duration: 0.5,
@@ -109,7 +111,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
     setQuery(value);
 
     const data = queryString.parse(window.location.search, {arrayFormat: 'bracket'});
-    let str;
+    let str = '';
     if(data.n) {
       str = `&n[]=${data.n.join('&n[]=')}`;
     }
@@ -165,7 +167,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
           height: '48px',
         }}>
           {!(page === 0) && (
-            <Button
+            <IconButton
               onClick={prevPage}
               key="search_nav_prev"
               initial="hidden"
@@ -175,7 +177,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
               layout
             >
               <ChevronLeft />
-            </Button>
+            </IconButton>
           )}
         </div>
         <div style={{
@@ -200,7 +202,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
           height: '48px',
         }}>
           {!(page === (totalPages - 1)) && (
-            <Button
+            <IconButton
               onClick={nextPage}
               key="search_nav_next"
               initial="hidden"
@@ -210,7 +212,7 @@ const Search = ({ initialQuery = '', nominate, isNominated }) => {
               layout
             >
               <ChevronRight />
-            </Button>
+            </IconButton>
           )}
         </div>
       </StyledSearchNav>

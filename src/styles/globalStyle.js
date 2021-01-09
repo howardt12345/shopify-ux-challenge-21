@@ -23,6 +23,9 @@ const GlobalStyles = createGlobalStyle`
     &:focus {
       color: ${({ theme }) => theme.accent};
     }
+    &:after {
+      display: none !important;
+    }
   }
   
   button {

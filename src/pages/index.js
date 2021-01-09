@@ -10,7 +10,7 @@ import Search from './search';
 import Nominations from './nominations';
 
 import { media, lightTheme, darkTheme, GlobalStyles } from '../styles';
-import { Button, InfoDialog } from '../components';
+import { Button, Copyright, InfoDialog } from '../components';
 
 const queryString = require('query-string');
 
@@ -142,6 +142,7 @@ const MainPage = () => {
   return (
     <ThemeProvider theme={theme === 'light' ? lightTheme : darkTheme}>
       <GlobalStyles />
+      <Copyright />
       <StyledInfoBox>
         <Button onClick={toggleTheme}>
           {theme === 'light' ? <Brightness3 /> : <Brightness7 />}
@@ -310,7 +311,7 @@ const MainPage = () => {
           </div>
         </motion.div>
       </StyledRoot>
-      <InfoDialog isOpen={infoDialog} onClose={() => setInfoDialog(false)}/>
+      <InfoDialog isOpen={infoDialog} onClose={() => setInfoDialog(false)} />
     </ThemeProvider>
   );
 }

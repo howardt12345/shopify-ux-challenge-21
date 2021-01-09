@@ -5,7 +5,7 @@ import styled, { ThemeContext } from 'styled-components';
 import { Github } from 'styled-icons/boxicons-logos';
 
 import { media } from '../styles';
-import { Button } from '../components';
+import { Button, Copyright } from '../components';
 
 const StyledDialog = styled(Dialog)`
   width: 600px;
@@ -45,7 +45,7 @@ export const InfoDialog = ({ isOpen, onClose }) => {
     >
       <StyledContainer>
         <StyledTitle>About</StyledTitle>
-        <StyledInfoContent>Created by Howard Tseng for the Shopify UX Developer Intern & Web Developer Intern (Summer 2021) Challenge. This project uses React and Styled Components, and is designed with both desktop and mobile layouts in mind.</StyledInfoContent>
+        <StyledInfoContent>Created by Howard Tseng for the Shopify UX Developer Intern & Web Developer Intern (Summer 2021) Challenge. This project uses React and Styled Components, with animations handled by Framer Motion. The website is hosted on Firebase, and Dynamic Links are used for the sharing feature.</StyledInfoContent>
         <StyledInfoContent>Hoping whoever sees this likes the application!</StyledInfoContent>
         <Button 
           href="https://github.com/howardt12345/shopify-ux-challenge-21"
@@ -53,13 +53,7 @@ export const InfoDialog = ({ isOpen, onClose }) => {
           rel="nofollow noopener noreferrer">
           <Github />
         </Button>
-        <StyledFooterLink
-          href="https://howardt12345.com"
-          target="_blank"
-          rel="nofollow noopener noreferrer"
-        >
-          <div>{`© ${new Date().getFullYear()} Howard Tseng`}</div>
-        </StyledFooterLink>
+        <Copyright />
       </StyledContainer>
       <button onClick={onClose}>Close</button>
     </StyledDialog>

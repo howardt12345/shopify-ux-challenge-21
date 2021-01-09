@@ -14,6 +14,12 @@ const RootContainer = styled.div`
   padding: 16px 16px;
   position: relative;
 `;
+const MovieName = styled.h3`
+  font-weight: 600;
+`;
+const MovieYear = styled.h5`
+  font-weight: 400;
+`;
 const ImageContainer = styled.div`
   margin: 0 16px 0 0;
 `;
@@ -22,7 +28,7 @@ const Image = styled.img`
   ${media.tablet`width: 15vw`};
 `;
 const InfoContainer = styled.div`
-
+  padding-bottom: 32px;
 `;
 
 export const MovieInfo = ({ search, movie, nominate, isNominated, unNominate }) => {
@@ -43,20 +49,20 @@ export const MovieInfo = ({ search, movie, nominate, isNominated, unNominate }) 
           />}
       </ImageContainer>
       <InfoContainer>
-        <h3>{Title}</h3>
-        <h5>{Year}</h5>
+        <MovieName>{Title}</MovieName>
+        <MovieYear>{Year}</MovieYear>
       </InfoContainer>
       <button
-          style={{
-            position: 'absolute',
-            right: '16px',
-            bottom: '16px'
-          }}
-          onClick={() => !isNominated ? nominate(movie) : unNominate(movie)}
-          disabled={search ? isNominated : !isNominated}
-        >
-          {search ? "Nominate" : "Remove"}
-        </button>
+        style={{
+          position: 'absolute',
+          right: '16px',
+          bottom: '16px'
+        }}
+        onClick={() => !isNominated ? nominate(movie) : unNominate(movie)}
+        disabled={search ? isNominated : !isNominated}
+      >
+        {search ? "Nominate" : "Remove"}
+      </button>
     </RootContainer>
   );
 }

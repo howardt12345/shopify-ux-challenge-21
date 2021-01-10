@@ -19,7 +19,7 @@ The challenge was to create a webpage that can search [OMDB](https://www.omdbapi
 - If a search result has already been nominated, disable its nominate button. ✓
 Display a banner when the user has 5 nominations. ✓
 
-### Extra Requirements Met:
+### Extra Requirements Met
 
 - Animations for loading, adding/deleting movies, and notifications. ✓
 - Creating shareable links. ✓

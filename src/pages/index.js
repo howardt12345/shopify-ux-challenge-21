@@ -95,7 +95,7 @@ const MainPage = () => {
   }
 
   const nominate = (nomination) => {
-    if (!isNominated(nomination)) {
+    if (!isNominated(nomination.id)) {
       let tmp = [...nominations];
       tmp.push(nomination);
       setNominations(tmp);
